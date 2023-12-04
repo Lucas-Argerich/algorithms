@@ -1,17 +1,17 @@
 public class Grafo {
     int vertices;
-    private double[][] datos;
+    private int[][] datos;
 
     public Grafo(int vertices) {
       this.vertices = vertices;
-      datos = new double[vertices][vertices];
+      datos = new int[vertices][vertices];
     }
 
     public void setPeso(int n, int m, int peso) {
       datos[n][m] = peso;
     }
 
-    public double getPeso(int n, int m) {
+    public int getPeso(int n, int m) {
       return datos[n][m];
     }
 
@@ -20,9 +20,9 @@ public class Grafo {
     }
 
     public void print() {
-      for (double[] linea : datos) {
+      for (int[] linea : datos) {
         System.out.print("[ ");
-        for (double valor : linea) {
+        for (int valor : linea) {
           System.out.print(valor + " ");
         }
         System.out.println("]");

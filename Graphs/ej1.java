@@ -3,18 +3,15 @@
 // Determinar cuántas son las cuadras mínimas para llegar de la escuela X al
 // gimnasio Y (ambos puntos están representados en el grafo).
 
-import java.util.Arrays;
-
 public class ej1 {
   public static void main(String[] args) {
-    int tamaño = 9;
+    int tamaño = 7;
 
     Grafo g = new Grafo(tamaño);
 
     g.setPeso(1, 2, 2);
     g.setPeso(1, 4, 15);
     g.setPeso(1, 5, 4);
-    g.setPeso(1, 6, 3);
     g.setPeso(2, 3, 3);
     g.setPeso(2, 5, 2);
     g.setPeso(3, 4, 6);
@@ -22,19 +19,22 @@ public class ej1 {
     g.setPeso(5, 6, 3);
     g.setPeso(6, 4, 1);
 
-    dijkstra(g, 1);
-    // g.print();
+    int origen = 1;
+    int destino = 4;
+
+    int distanciaOrigenDestino = dijkstra(g, origen, destino);
+    System.out.println(distanciaOrigenDestino);
   }
 
-  public static void printSolution(double dist[]) {
+  public static void printSolution(int dist[]) {
     System.out.println(
         "Vertex \t\t Distance from Source");
     for (int i = 0; i < dist.length; i++)
       System.out.println(i + " \t\t " + dist[i]);
   }
 
-  public static int minDistance(double[] dist, Boolean[] visitados) {
-    double min = Double.MAX_VALUE;
+  public static int minDistance(int[] dist, Boolean[] visitados) {
+    int min = Integer.MAX_VALUE;
     int index = -1;
 
     for (int v = 0; v < dist.length; v++) {
@@ -43,39 +43,36 @@ public class ej1 {
         index = v;
       }
     }
-    System.out.println("MIN: " + index);
+
     return index;
   }
 
-  public static void dijkstra(Grafo grafo, int inicio) {
-    double[] distancias = new double[grafo.vertices];
+  public static int dijkstra(Grafo grafo, int inicio, int destino) {
+    int[] distancias = new int[grafo.vertices];
     Boolean[] visitados = new Boolean[grafo.vertices];
 
-    for (int i = 0; i < grafo.vertices; i++) {
-      distancias[i] = Double.MAX_VALUE;
+    for (int i = 0; i < distancias.length; i++) {
+      distancias[i] = Integer.MAX_VALUE;
       visitados[i] = false;
     }
 
     distancias[inicio] = 0;
 
-    for (int i = 0; i < grafo.vertices - 1; i++) {
-      System.out.println(Arrays.toString(distancias));
-      int u = minDistance(distancias, visitados); // O(n)
+    for (int i = 0; i < distancias.length; i++) {
+      int u = minDistance(distancias, visitados);
       visitados[u] = true;
 
-      for (int v = 0; v < grafo.vertices; v++) {
-        System.out.println("Revisando: " + u + " -> " + v + " p:" + grafo.getPeso(u, v));
+      for (int j = 0; j < distancias.length; j++) {
+        if (!grafo.existeArista(u, j)) continue;
 
-        if (!grafo.existeArista(u, v))
-          continue; // validar si hay arista
+        int peso = grafo.getPeso(u, j);
 
-        double peso = grafo.getPeso(u, v);
-
-        if (visitados[v] == false && distancias[u] + peso < distancias[v]) {
-          distancias[v] = distancias[u] + peso;
+        if (distancias[j] > distancias[u] + peso) {
+          distancias[j] = distancias[u] + peso;
         }
       }
     }
-    printSolution(distancias);
+
+    return distancias[destino];
   }
 }
